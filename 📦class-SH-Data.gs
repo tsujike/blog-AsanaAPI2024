@@ -59,16 +59,6 @@ class DataSheet {
   }
 
 
-  // /** シートのクリア(単独で走らせたら危ないので、必ずプライベート化して、setAllRecords()などに組み込む) */
-  // sheetClear_() {
-  //   const lastRow = this.sheet.getLastRow();
-  //   const lastColumn = this.sheet.getLastColumn();
-  //   const range = this.sheet.getRange(2, 1, lastRow, lastColumn);
-  //   range.clear();
-  //   return 'シートをクリアしました';
-  // }
-
-
   /** starの付いていないレコードをpostシートに貼り付けるメソッド */
   postRecordWithoutStar() {
     const post = new PostSheet();

@@ -31,11 +31,14 @@ class PostSheet {
     const d = new DataSheet();
     const records = d.getRecordWithoutStar();
 
+    //ガード節
+    if (records.length === 0) return '★無しレコードはありません';
+
     //2次元配列に戻す
     const recordsArray = records.map(record => Object.values(record));
 
     // 2行目から貼り付け
-    post.sheet.getRange(2, 1, recordsArray.length, recordsArray[0].length).setValues(recordsArray);
+    this.sheet.getRange(2, 1, recordsArray.length, recordsArray[0].length).setValues(recordsArray);
 
     //starをつける
     d.setStarToDataSheetRecord();
@@ -43,41 +46,18 @@ class PostSheet {
     return '★無しレコードをpostシートに貼り付けました';
   }
 
-  /** Asana用にタスクを整形する
-   * @param{Object} objectRecords
-   * @return{Object} objectRecords
-   */
-  formatTaskForAsana(objectRecords) {
-    const taskArray = objectRecords.map(objectRecord => {
-      const task = {
-        memberships:objectRecord['memberships'],
-        // projectId: objectRecord['projectId'],
-        // sectionId: objectRecord['sectionId'],
-        name: objectRecord['name'],
-        notes: objectRecord['notes'],
-        assignee: objectRecord['assignee'],
-        tags: objectRecord['tags'],
-        followersIds: objectRecord['followersIds']
-      };
-      return task;
-    });
-    return taskArray;
-  }
-
 
   /** Asanaにタスクを登録する */
   postTaskToAsana() {
     //タスクの取得
-    const tasks = this.getPostSheetRecords();
+    const records = this.getPostSheetRecords();
 
-    //タスクデータの整形
-    const records = this.formatTaskForAsana(tasks);
 
     //AsanaAPIのインスタンス化（未実装）
-    // const a = new CustomAsana();
+    const a = new CustomAsana();
 
     //タスクを登録する処理（未実装）
-    // records.map(record => a.createTask(record));
+    records.map(record => a.createTask(record));
 
     //postシートをクリア
     this.sheetClear_();
@@ -102,7 +82,7 @@ class PostSheet {
 /** TEST関数 */
 function testPostSheet() {
 
-  //Dataシートのインスタンス化
+  //Postシートのインスタンス化
   const p = new PostSheet();
   
   // starの付いていないレコードを取得し、postシートに貼り付ける
