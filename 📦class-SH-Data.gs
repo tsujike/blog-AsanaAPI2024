@@ -3,7 +3,7 @@ class DataSheet {
 
   /** コンストラクタ */
   constructor() {
-    this.sheetName = 'Data';
+    this.sheetName = 'data';
     this.SPREADSHEET_ID = PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID');
     this.sheet = SpreadsheetApp.openById(this.SPREADSHEET_ID).getSheetByName(this.sheetName);
   }
@@ -43,7 +43,7 @@ class DataSheet {
     });
 
     this.setAllRecords_(objectRecords);
-    return "Dataシートに引数を渡しました";
+    return "dataシートに引数を渡しました";
   }
 
 
@@ -59,38 +59,43 @@ class DataSheet {
   }
 
 
-  /** シートのクリア(単独で走らせたら危ないので、必ずプライベート化して、setAllRecords()などに組み込む) */
-  sheetClear_() {
-    const lastRow = this.sheet.getLastRow();
-    const lastColumn = this.sheet.getLastColumn();
-    const range = this.sheet.getRange(2, 1, lastRow, lastColumn);
-    range.clear();
-    return 'シートをクリアしました';
+  // /** シートのクリア(単独で走らせたら危ないので、必ずプライベート化して、setAllRecords()などに組み込む) */
+  // sheetClear_() {
+  //   const lastRow = this.sheet.getLastRow();
+  //   const lastColumn = this.sheet.getLastColumn();
+  //   const range = this.sheet.getRange(2, 1, lastRow, lastColumn);
+  //   range.clear();
+  //   return 'シートをクリアしました';
+  // }
+
+
+  /** starの付いていないレコードをpostシートに貼り付けるメソッド */
+  postRecordWithoutStar() {
+    const post = new PostSheet();
+    const records = this.getRecordWithoutStar();
+    post.setAllRecords_(records);
+    return 'postシートに引数を渡しました';
   }
 
 
 }
 
 
-
 /** TEST関数 */
 function testDataSheet() {
 
-  //Dataシートの・・・
+  //Dataシートのインスタンス化
   const d = new DataSheet();
 
-  //全てのRecordsをdictsMapsで取得する
+  //全てのRecordsをオブジェクトレコーズで取得する
   const records = d.getDataSheetRecords();
-  // console.log(d.getDataSheetRecords());
+  console.log(d.getDataSheetRecords());
 
-  //starのついていないRecordだけをobjectRecordsで取得する（1件のはず）
+  //starのついていないRecordだけをobjectRecordsで取得する
   const record = d.getRecordWithoutStar();
-  // console.log(d.getRecordWithoutStar());
+  console.log(d.getRecordWithoutStar());
 
-  // すべてのRecordsにStarをつけて更新するメソッド
+  // すべてのRecordsにStarをつけて更新する
   console.log(d.setStarToDataSheetRecord());
-
-  //シートのクリア sheetClear()　単独では呼ばない
-  // console.log(d.sheetClear_());
 
 }

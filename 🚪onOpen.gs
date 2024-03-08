@@ -23,16 +23,5 @@ function onOpen() {
         .addItem('🚑搬入情報', 'updateTransportURL_') //function-main.gs
     )
     .addToUi();
-
-  ui.createMenu('🍺Gmail-DHL-freee')
-    .addItem('🚀出荷処理一括実行', 'finalizeShipment')//function-main.gs
-    .addSeparator()
-    .addSubMenu(
-      ui.createMenu("🥑個別実行")
-        .addItem('🚁Gmail作成', 'creatDraftGmail_') //function-main.gs
-        .addItem('🚁DHL連携', 'connectDHLSheet') //function-main.gs
-        .addItem('🚁freee登録', 'registShipmentRecord') //function-main.gs
-    )
-    .addToUi();
-
+    
 }

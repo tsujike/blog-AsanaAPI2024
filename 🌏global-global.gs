@@ -48,16 +48,7 @@ function setPropertyStore() {
 
 
     const SPREADSHEET_ID = ""; //スプレッドシートIDを入力してください
-    // -台湾-
-    // FWS 1ca-GYU4hJPXpkvfemLTF65fJP85FgH6utly3X9tyZ8Y
-    // AWT 1roesRs6cmMxgY8voOxyznl9YWuSFWvTJmNIG2JvNNr0
-    // SIT 1217yBrv6avrGS1mNv3LSdeRCr5S0JaOcXj_8BNwi6e4
-    // -マレーシア-
-    // ESE 12t-7Pja4xekPH2kM1Ue6oyK224hjTpwEr3vlB10O5PE
-    // KKS
-    // SBS 10qjjaxS7n8vji7yCVpn_B9vytdgHxu2UbEjw_4XqK1s
-    // -Rankwell-
-    // EGT 116lMZl7EAAvp1rQZjHTNMPAc3omI3D-K3iyiFh3TO8g
+
     
     properties.setProperty('SPREADSHEET_ID', SPREADSHEET_ID);
 
@@ -77,22 +68,6 @@ function setPropertyStore() {
     //作業用フォルダ
     const SALESDEPTFOLDER_ID = "1yOB0FqGXPUbUja3WYd1A_pZA7MyEAqx1";
     properties.setProperty('SALESDEPTFOLDER_ID', SALESDEPTFOLDER_ID);
-
-    //インボイスURLの初期値
-    const INVOICE_URL = "https://docs.google.com/spreadsheets/d/1HKE6SIvm5Z0vg01o4fE179JNHJmB7Bdp5PdiB6sqzBk/edit#gid=0";
-    properties.setProperty('INVOICE_URL', INVOICE_URL);
-
-    //カスタムインボイスURLの初期値
-    const CUSTOMINVOICE_URL = "https://docs.google.com/spreadsheets/d/1HKE6SIvm5Z0vg01o4fE179JNHJmB7Bdp5PdiB6sqzBk/edit#gid=0";
-    properties.setProperty('CUSTOMINVOICE_URL', CUSTOMINVOICE_URL);
-
-    //パッキングリストURLの初期値
-    const PACKINGLIST_URL = "https://docs.google.com/spreadsheets/d/1HKE6SIvm5Z0vg01o4fE179JNHJmB7Bdp5PdiB6sqzBk/edit#gid=0";
-    properties.setProperty('PACKINGLIST_URL', PACKINGLIST_URL);
-
-    //搬入情報URLの初期値
-    const TRANSPORT_URL = "https://docs.google.com/spreadsheets/d/1HKE6SIvm5Z0vg01o4fE179JNHJmB7Bdp5PdiB6sqzBk/edit#gid=0";
-    properties.setProperty('TRANSPORT_URL', TRANSPORT_URL);
     
     //インボイスNoの初期値
     const INVOICE_NO = "TGG999999";
@@ -106,53 +81,3 @@ function setPropertyStore() {
 }
 
 
-
-/**
-* getInvoiceNoInPropstore()から現在のinvoiceNoを呼び、OKならそのまま、CANCELなら新しいNoを入力してもらう関数
-* カスタムメニューから実行する
-* @return{void}
-*/
-function setupInvoiceNo() {
-
-    //プロパティストアの選択
-    const properties = PropertiesService.getScriptProperties();
-
-    //プロパティストアに格納されているinvoiceNoを取得する
-    const currentInvoiceNo = properties.getProperty('INVOICE_NO');
-
-    //ユーザーに確認を促す
-    const ui = SpreadsheetApp.getUi();
-    const checkInvoiceNo = ui.alert("InvoiceNoは  " + "『" + currentInvoiceNo + "』", "実行 = OK // 新しいNoを入力 = CANCEL ", ui.ButtonSet.OK_CANCEL);
-
-    //ユーザーの選択によって処理を分岐
-    switch (checkInvoiceNo) {
-        case ui.Button.OK:
-            break;
-        case ui.Button.CANCEL:
-            const response = ui.prompt("新しいinvoiceNoを入れてください", ui.ButtonSet.OK_CANCEL);
-
-            //InvoiceNoをプロパティストアに格納する
-            const INVOICE_NO = response.getResponseText();
-            properties.setProperty("INVOICE_NO", INVOICE_NO);
-
-            //ConsigneeCodeをプロパティストアに格納する
-            const CONSIGNEE_CODE = INVOICE_NO.match(/^[A-Za-z]{3}/)[0];
-            properties.setProperty('CONSIGNEE_CODE', CONSIGNEE_CODE);
-
-            //ConsigneeNameをプロパティストアに格納する
-            const c = new CustomersSheet();
-            const CONSIGNEE_NAME = c.getConsigneeNameByCode(CONSIGNEE_CODE);
-            properties.setProperty('CONSIGNEE_NAME', CONSIGNEE_NAME);
-
-            //CustomerCodeをプロパティストアに格納する            
-            const CUSTOMER_CODE = c.getCustomerCodeByCode(CONSIGNEE_CODE);
-            properties.setProperty('CUSTOMER_CODE', CUSTOMER_CODE);
-
-            //CustomerNameをプロパティストアに格納する
-            const CUSTOMER_NAME = c.getCustomerNameByCode(CUSTOMER_CODE);
-            properties.setProperty('CUSTOMER_NAME', CUSTOMER_NAME);
-
-            break;
-        default:
-    }
-}
